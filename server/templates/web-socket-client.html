@@ -6,7 +6,7 @@
             let socket;
 
             window.onload = e => {
-                socket = io('http://localhost:5000');
+                socket = io(document.domain + ":" + location.port);
                 socket.on('connection', (s) => {
                     console.log(s);
                 });

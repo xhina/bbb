@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 
 app = Flask(__name__)
-# CORS(app, resources={r"/socket.io/*":{"origins":"*"}})
+CORS(app)
 app.secret_key = "bbbbbbbbbbb6917"
 app.debug = True
 socketio = SocketIO(app)
@@ -16,7 +16,7 @@ def before_reqest():
 
 @app.route('/')
 def index():
-    return render_template('web-socket-client.html');
+    return render_template('web-socket-client.html')
 
 @socketio.on('connect')
 def connect():
