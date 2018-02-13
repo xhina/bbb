@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head lang="ko">
+        <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script>
+            let socket;
+
+            window.onload = e => {
+                socket = io('http://localhost:5000');
+                socket.on('connection', (s) => {
+                    console.log(s);
+                });
+
+                socket.on('response', (s) => {
+                    console.log(s);
+                });
+            }
+
+            function onClick() {
+                socket.emit('request');
+            }
+        </script>
+    </head>
+    <body>
+       <button onclick="onClick()">connect</button> 
+    </body>
+</html>
