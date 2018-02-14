@@ -38,31 +38,34 @@ def telegramBotUpdate():
     pass
 
 def runBusBot():
-    global prev_flag_bus_bot
+    try:
+        global prev_flag_bus_bot
 
-    cTime = datetime.datetime.now().strftime('%Y-%m-%d %H-%M')
+        cTime = datetime.datetime.now().strftime('%Y-%m-%d %H-%M')
 
-    if prev_flag_bus_bot != flag_bus_bot:
-        sendMessageToMaster("/start_bus" if flag_bus_bot else "/stop_bus")
+        if prev_flag_bus_bot != flag_bus_bot:
+            sendMessageToMaster("/start_bus" if flag_bus_bot else "/stop_bus")
 
-    prev_flag_bus_bot = flag_bus_bot        
+        prev_flag_bus_bot = flag_bus_bot        
 
-    if flag_bus_bot == False or ownerChatId == "":
-        threading.Timer(INTERVAL_UPDATE_CHECK, runBusBot).start()
-        return
+        if flag_bus_bot == False or ownerChatId == "":
+            threading.Timer(INTERVAL_UPDATE_CHECK, runBusBot).start()
+            return
 
-    res = crawler.run_companyToHome()
-    
-    botMsg = '''
+        res = crawler.run_companyToHome()
+        
+        botMsg = '''
 회사 -> 집 (정류장:23202)
 -----------------------
 {0}
 (1): {1}
 (2): {2}
-    '''.format(cTime, res['res1'], res['res2'])
+        '''.format(cTime, res['res1'], res['res2'])
 
-    sendMessageToMaster(botMsg)
-    threading.Timer(INTERVAL_BOT_SEC, runBusBot).start()
+        sendMessageToMaster(botMsg)
+        threading.Timer(INTERVAL_BOT_SEC, runBusBot).start()
+    except:
+        threading.Timer(INTERVAL_BOT_SEC, runBusBot).start()
     pass
 
 def sendMessageToMaster(msg):
