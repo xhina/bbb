@@ -54,7 +54,8 @@ def runBusBot():
     res = crawler.run_companyToHome()
     
     botMsg = '''
-<회사 -> 집 버스도착시간>
+회사 -> 집 (정류장:23202)
+------------------
 현재시각:{0}
 (1): {1}
 (2): {2}
