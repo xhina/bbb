@@ -65,7 +65,6 @@ def runBusBot():
     pass
 
 def sendMessageToMaster(msg):
-    print(msg)
     if ownerChatId == "":
         return
     bot.sendMessage(chat_id = ownerChatId, text = msg)
@@ -73,4 +72,4 @@ def sendMessageToMaster(msg):
 
 telegramBotUpdate()
 runBusBot()
-
+print('run - botori_bot_telegram')
