@@ -1,5 +1,6 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import time
 
 class MainCrawler:
     def __init__(self):
@@ -19,3 +20,12 @@ class MainCrawler:
         msg2 = soup.select('div.search_result_list_wrap > div > table > tbody > tr')[2].select('td.stat_arr > div')[3].text.strip()
         return {"res1":msg1, "res2":msg2}
 
+    def run_rippleRealtimePrice(self):
+        self.driver.get('https://www.clien.net/service/board/cm_vcoin')
+        self.driver.find_element_by_xpath('//*[@id="XRP"]').click()
+        time.sleep(0.1)
+        
+        html = self.driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+        msg = soup.select('#coin_row_5 > span.board_krw.list > span')[0].text.strip()
+        return msg
