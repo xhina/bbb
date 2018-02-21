@@ -10,7 +10,7 @@ my_token = '498746306:AAEBTsIQVHqrNhcwpHji1yCfycUsx4Brg5Y'
 bot = telegram.Bot(token = my_token)
 ownerChatId = ""
 crawler = MainCrawler()
-flag_bus_bot = True
+flag_bus_bot = False
 doBotAction = False
 prev_flag_bus_bot = flag_bus_bot
 msgId = 0
@@ -40,12 +40,18 @@ def telegramBotUpdate():
                 pass
             elif "/start_bus" in txt:
                 flag_bus_bot = True
-                params = txt.split('=')
+                params = txt.split(' ')
                 if len(params) > 1:
                     INTERVAL_BOT_SEC = max(3, int(params[1]))
                 pass
             elif "/rp" in txt:
                 runRipplePriceBot()
+                pass
+            elif "/sb" in txt:
+                params = txt.split(' ')
+                if len(params) > 1:
+                    subway = params[1]
+                    searchSubwayTime(subway)
                 pass
 
             msgId = lastMsg.message_id
@@ -91,6 +97,20 @@ def runRipplePriceBot():
 --------------------
 {0}
     '''.format(price)
+    sendMessageToMaster(msg)
+    pass
+
+def searchSubwayTime(subwayName):
+    time = crawler.run_subwayTime(subwayName)
+    msg = '''
+지하철시간정보 {0}역    
+--------------
+{1}
+{2}
+
+{3}
+{4}
+    '''.format(subwayName, time[0], time[1], time[2], time[3])
     sendMessageToMaster(msg)
     pass
 

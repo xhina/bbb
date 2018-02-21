@@ -29,3 +29,18 @@ class MainCrawler:
         soup = BeautifulSoup(html, 'html.parser')
         msg = soup.select('#coin_row_5 > span.board_krw.list > span')[0].text.strip()
         return msg
+
+    def run_subwayTime(self, search):
+        self.driver.get('http://m.seoul.go.kr/traffic/SubInfoMain.do')
+        self.driver.find_element_by_xpath('//*[@id="hd"]/form/fieldset/div/span/input').send_keys(search)
+        self.driver.find_element_by_xpath('//*[@id="hd"]/form/fieldset/div/input[1]').click()
+        self.driver.find_element_by_css_selector('#busStation > ul > li > a').click()
+
+        html = self.driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+
+        msg1 = soup.select('#subArrInfo')[0].select('ul > li > a .p')[0].text.strip()
+        msg2 = soup.select('#subArrInfo')[0].select('ul > li > a .p')[1].text.strip()
+        msg3 = soup.select('#subArrInfo')[1].select('ul > li > a .p')[0].text.strip()
+        msg4 = soup.select('#subArrInfo')[1].select('ul > li > a .p')[1].text.strip()
+        return [msg1, msg2, msg3, msg4]
