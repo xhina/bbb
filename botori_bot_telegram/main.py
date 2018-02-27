@@ -1,6 +1,8 @@
 import telegram
 import datetime
 import threading
+import daemon
+from daemon.pidfile import PIDLockFile
 from Crawler import MainCrawler
 
 INTERVAL_BOT_SEC = 20
@@ -35,10 +37,10 @@ def telegramBotUpdate():
             if lastMsg.message_id == msgId:
                return
 
-            if "/stop_bus" in txt:
+            if "/bus_s" in txt:
                 flag_bus_bot = False
                 pass
-            elif "/start_bus" in txt:
+            elif "/bus" in txt:
                 flag_bus_bot = True
                 params = txt.split(' ')
                 if len(params) > 1:
@@ -53,11 +55,25 @@ def telegramBotUpdate():
                     subway = params[1]
                     searchSubwayTime(subway)
                 pass
+            elif "/cmd" in txt:
+                showCommandList()
+                pass
 
             msgId = lastMsg.message_id
     finally:
         threading.Timer(INTERVAL_UPDATE_CHECK, telegramBotUpdate).start()
     pass
+
+def showCommandList():
+    sendMessageToMaster('''
+/bus_s - 버스 알람 정지
+/bus {p1=20} - 집까지가는 버스 도착 시간
+/rp - 리플 가격
+/sb {p1} - 지하철역 
+/cmd - 커맨드 리스트
+    ''')
+    pass
+    
 
 def runBusBot():
     try:
@@ -122,8 +138,13 @@ def sendMessageToMaster(msg):
 
 
 if __name__ == '__main__':
-    telegramBotUpdate()
-    runBusBot()
-    print('run - botori_bot_telegram')
-    pass
+    lockFile = PIDLockFile('.pid')
+    if lockFile.is_locked():
+        exit(1)
 
+    with daemon.DaemonContext():
+        telegramBotUpdate()
+        runBusBot()
+        print('run - botori_bot_telegram')
+        pass
+    pass
